@@ -1,6 +1,8 @@
 // code to build and initialize DB goes here
 const {
   client,
+  createLinkTag,
+  createLink,
   // other db methods
 } = require("./index");
 
@@ -46,6 +48,19 @@ async function buildTables() {
 
 async function populateInitialData() {
   try {
+    console.log("starting to built random data");
+    await createLink({
+      url: "https://www.google.com",
+      comments: "search anything",
+    });
+    await createLink({
+      url: "https://www.fullstackacademy.com/",
+      comments: "why am im I doing this",
+    });
+    await createLink({
+      url: "https://www.youtube.com",
+      comments: "watch and learn",
+    });
     // create useful starting data
   } catch (error) {
     throw error;
