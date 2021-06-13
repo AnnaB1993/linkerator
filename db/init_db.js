@@ -3,6 +3,7 @@ const {
   client,
   createLinkTag,
   createLink,
+  createTags,
   // other db methods
 } = require("./index");
 
@@ -52,18 +53,21 @@ async function populateInitialData() {
     await createLink({
       url: "https://www.google.com",
       comments: "search anything",
+      tags: ["google", "search"],
     });
     await createLink({
       url: "https://www.fullstackacademy.com/",
       comments: "why am im I doing this",
+      tags: ["learn", "coding"],
     });
     await createLink({
       url: "https://www.youtube.com",
       comments: "watch and learn",
+      tags: ["videos", "world"],
     });
     // create useful starting data
   } catch (error) {
-    throw error;
+    console.log("populateInitialData", error);
   }
 }
 

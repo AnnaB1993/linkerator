@@ -23,7 +23,7 @@ async function createLink({ url, comments, tags = [] }) {
     const tagList = await createTags(tags);
     return await addTagsToLink(link.id, tagList);
   } catch (error) {
-    console.error(error);
+    console.log("createLink", error);
   }
 }
 
@@ -34,7 +34,7 @@ async function createTags(tagList) {
 
   const insertTags = tagList.map((_, index) => `$${index + 1}`).join("), (");
 
-  const selectTags = taglist.map((_, index) => `$${index + 1}`).join(", ");
+  const selectTags = tagList.map((_, index) => `$${index + 1}`).join(", ");
 
   try {
     await client.query(
@@ -55,7 +55,7 @@ async function createTags(tagList) {
 
     return rows;
   } catch (error) {
-    console.log(error);
+    console.log("createTags", error);
   }
 }
 
@@ -69,7 +69,7 @@ async function createLinkTag(linkId, tagId) {
       [linkId, tagId]
     );
   } catch (error) {
-    console.log(error);
+    console.log("createLinkTag", error);
   }
 }
 async function addTagsToLink(linkId, tagList) {
@@ -78,35 +78,96 @@ async function addTagsToLink(linkId, tagList) {
     await Promise.all(allTagsPromises);
     return await getLinkById(linkId);
   } catch (error) {
-    console.log(error);
+    console.log("addTagsToLink", error);
   }
 }
 
-async function getLinkById(linkId){
-  try{
-    const {rows: [link]} = await client.query(`
+async function getLinkById(linkId) {
+  try {
+    const {
+      rows: [link],
+    } = await client.query(
+      `
     SELECT * FROM links
-    WHERE id=$1,
-    `, [linkId]);
+    WHERE id=$1;
+    `,
+      [linkId]
+    );
 
     if (!link) {
       throw {
         name: "LinkNotFoundError",
-        message: "Could not find a link with that linkId"
+        message: "Could not find a link with that linkId",
       };
     }
 
-    
+    const { rows: tags } = await client.query(
+      `
+    SELECT tags.* FROM tags
+    JOIN link_tags ON tags.id=link_tags."tagId"
+    WHERE link_tags."linkId"=$1;
+    `,
+      [linkId]
+    );
 
-  }catch(error){
-    console.error(error)
+    link.tags = tags;
+    return link;
+  } catch (error) {
+    console.error("getLinkById", error);
   }
 }
 
+async function getAllTags() {
+  try {
+    const { rows } = await client.query(`
+    SELECT * FROM tags;
+`);
+    return rows;
+  } catch (error) {
+    console.log("getAllTags", error);
+  }
+}
+//all links including their tags//
+async function getAllLinks() {
+  try {
+    const { rows: linkIds } = await client.query(`
+    SELECT * FROM links;
+    `);
+    const allLinks = await Promise.all(
+      linkIds.map((link) => getLinkById(link.id))
+    );
+    return allLinks;
+  } catch (error) {
+    console.log("getAllLinks", error);
+  }
+}
+
+async function getLinksByTag(tagname) {
+  try {
+    const { rows: linkIds } = await client.query(
+      `
+SELECT id FROM links
+JOIN link_tags ON links.id=link_tags."linkId"
+JOIN tags ON tags.id=link_tags."linkId"
+WHERE tags.tagname=$1;
+`,
+      [tagname]
+    );
+    return await Promise.all(linkIds.map((link) => getLinkById(link.id)));
+  } catch (error) {
+    console.log("getLinksByTag", error);
+  }
+}
 // export
 module.exports = {
   client,
   createLinkTag,
   createLink,
-  // db methods
+  updateLink,
+  addTagsToLink,
+  getLinkById,
+  createTags,
+  getAllLinks,
+  getAllTags,
+  getLinksByTag,
 };
