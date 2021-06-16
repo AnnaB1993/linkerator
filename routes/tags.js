@@ -30,7 +30,7 @@ tagsRouter.post("/", async (req, res, next) => {
   }
 });
 
-tagsRouter.get("/:tagName/posts", async (req, res, next) => {
+tagsRouter.get("/:tagName/links", async (req, res, next) => {
   //read tagname from the url params
   const tagName = req.params.tagName;
   // console.log("req.params:", req.params);

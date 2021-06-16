@@ -1,7 +1,6 @@
 const express = require("express");
 const linksRouter = express.Router();
 const { getAllLinks, createLink } = require("../db/index");
-const tagsRouter = require("./tags");
 
 linksRouter.use((req, res, next) => {
   console.log("A request is being made to /links");
