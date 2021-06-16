@@ -143,13 +143,15 @@ async function getLinksByTag(tagname) {
   try {
     const { rows: linkIds } = await client.query(
       `
-SELECT id FROM links
+SELECT links.id 
+FROM links
 JOIN link_tags ON links.id=link_tags."linkId"
 JOIN tags ON tags.id=link_tags."linkId"
 WHERE tags.tagname=$1;
 `,
       [tagname]
     );
+
     return await Promise.all(linkIds.map((link) => getLinkById(link.id)));
   } catch (error) {
     console.log("getLinksByTag", error);
