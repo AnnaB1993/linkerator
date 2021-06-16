@@ -1,7 +1,8 @@
 // Connect to DB
 const { Client } = require("pg");
 const DB_NAME = "linkerator-dev";
-const DB_URL = process.env.DATABASE_URL || `postgres://localhost:5432/${DB_NAME}`;
+const DB_URL =
+  process.env.DATABASE_URL || `postgres://localhost:5432/${DB_NAME}`;
 const client = new Client(DB_URL);
 
 // database methods
@@ -23,6 +24,50 @@ async function createLink({ url, comments, tags = [] }) {
     return await addTagsToLink(link.id, tagList);
   } catch (error) {
     console.log("createLink", error);
+  }
+}
+
+async function updateLink(linkId, fields = {}) {
+  const { tags } = fields;
+  delete fields.tags;
+
+  const insertFields = Object.keys(fields).map((key, index) => {
+    `"${key}"=$${index + 1}`.join(", ");
+  });
+  try {
+    if (insertFields.length > 0) {
+      await client.query(
+        `
+    UPDATE links
+    SET ${insertFields}
+    WHERE id=${linkId}
+    RETURNING *;
+    `,
+        Object.values(fields)
+      );
+    }
+    if (tags === undefined) {
+      return await getLinkById(linkId);
+    }
+
+    const tagList = await createTags(tags);
+    const tagListIds = tagList.map((tag) => `${tag.id}`).join(", ");
+
+    // delete any post_tags from the database which aren't in that tagList
+    await client.query(
+      `
+    DELETE FROM link_tags
+    WHERE "tagId"
+    NOT IN (${tagListIds})
+    AND "linkId"=$1;
+    `,
+      [linkId]
+    );
+     // and create post_tags as necessary
+    await addTagsToLink(linkId, tagList);
+    return getLinkById(linkId);
+  } catch (error) {
+    console.log("updateLink", error);
   }
 }
 
@@ -132,7 +177,9 @@ async function getAllLinks() {
     const { rows: linkIds } = await client.query(`
     SELECT * FROM links;
     `);
-    const allLinks = await Promise.all(linkIds.map((link) => getLinkById(link.id)));
+    const allLinks = await Promise.all(
+      linkIds.map((link) => getLinkById(link.id))
+    );
     return allLinks;
   } catch (error) {
     console.log("getAllLinks", error);
@@ -160,7 +207,7 @@ module.exports = {
   client,
   createLinkTag,
   createLink,
-  // updateLink,
+  updateLink,
   addTagsToLink,
   getLinkById,
   createTags,
