@@ -1,8 +1,7 @@
 // Connect to DB
 const { Client } = require("pg");
 const DB_NAME = "linkerator-dev";
-const DB_URL =
-  process.env.DATABASE_URL || `postgres://localhost:5432/${DB_NAME}`;
+const DB_URL = process.env.DATABASE_URL || `postgres://localhost:5432/${DB_NAME}`;
 const client = new Client(DB_URL);
 
 // database methods
@@ -63,7 +62,7 @@ async function updateLink(linkId, fields = {}) {
     `,
       [linkId]
     );
-     // and create post_tags as necessary
+    // and create post_tags as necessary
     await addTagsToLink(linkId, tagList);
     return getLinkById(linkId);
   } catch (error) {
@@ -177,9 +176,7 @@ async function getAllLinks() {
     const { rows: linkIds } = await client.query(`
     SELECT * FROM links;
     `);
-    const allLinks = await Promise.all(
-      linkIds.map((link) => getLinkById(link.id))
-    );
+    const allLinks = await Promise.all(linkIds.map((link) => getLinkById(link.id)));
     return allLinks;
   } catch (error) {
     console.log("getAllLinks", error);
@@ -193,7 +190,7 @@ async function getLinksByTag(tagname) {
 SELECT links.id 
 FROM links
 JOIN link_tags ON links.id=link_tags."linkId"
-JOIN tags ON tags.id=link_tags."linkId"
+JOIN tags ON tags.id=link_tags."tagId"
 WHERE tags.tagname=$1;
 `,
       [tagname]
