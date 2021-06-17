@@ -70,6 +70,25 @@ async function updateLink(linkId, fields = {}) {
   }
 }
 
+async function updateClickCount(linkId, clickCount) {
+  try {
+    await client.query(
+      `
+      UPDATE links
+      SET clicks=$2
+      WHERE id=$1
+      RETURNING *;
+      `,
+      [linkId, clickCount]
+    );
+
+    const updatedLink = await getLinkById(linkId);
+    return updatedLink;
+  } catch (error) {
+    console.log("updateClickCount:", error);
+  }
+}
+
 async function createTags(tagList) {
   if (tagList.length === 0) {
     return;
@@ -213,4 +232,5 @@ module.exports = {
   getAllLinks,
   getAllTags,
   getLinksByTag,
+  updateClickCount,
 };
