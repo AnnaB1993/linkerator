@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react";
 
-import { getLinksOnPage, getSomething } from "../api";
+import { getAllLinks, getSomething, sortAllLinksByPopularity } from "../api";
+import {Header} from "./index.js"
 
 const App = () => {
-  const [mainContent, setMainContent] = useState([]);
+  const [allLinks, setAllLinks] = useState([]);
 
   useEffect(() => {
-    // getSomething()
-    //   .then(response => {
-    //     setMessage(response.message);
-    //   })
-    //   .catch(error => {
-    //     setMessage(error.message);
-    //   });
-    getLinksOnPage().then((response) => setMainContent(response))
-    // .catch((error) => console.error(error)));
+    getAllLinks()
+    .then(response => {setAllLinks(response.data);
+    })
+    .catch(error => {
+      console.log(error)})
+
+    sortAllLinksByPopularity()
+    .then(response => console.log(response))
   });
+
 
   return (
     <div className="App">
-      <h1>Hello, World!</h1>
-      <h2>{mainContent}</h2>
+      <Header/>
     </div>
   );
 };
