@@ -4,7 +4,7 @@ const SingleLink = ({ singleLink }) => {
   const { url, comments, clicks, date, tags } = singleLink;
 
   return (
-    <div className="card my-2">
+    <div className="card my-3 mx-2">
       <div className="card-content">
         <div className="content">
           <p>{url}</p>
