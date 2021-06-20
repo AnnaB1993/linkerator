@@ -1,28 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import {
-  getSomething
-} from '../api';
+import { getAllLinks, getSomething, sortAllLinksByPopularity } from "../api";
+import {Header, MainLinks, SingleLink} from "./index.js"
 
 const App = () => {
-  const [message, setMessage] = useState('');
+  const [allLinks, setAllLinks] = useState([]);
 
   useEffect(() => {
-    getSomething()
-      .then(response => {
-        setMessage(response.message);
-      })
-      .catch(error => {
-        setMessage(error.message);
-      });
-  });
+    getAllLinks()
+    .then(response => {setAllLinks(response);
+    })
+    .catch(error => {
+      console.log(error)})
+
+    // sortAllLinksByPopularity()
+    //
+     .then(response => console.log(response))
+  }, []);
+
 
   return (
     <div className="App">
-      <h1>Hello, World!</h1>
-      <h2>{ message }</h2>
+      <Header allLinks={allLinks} setAllLinks={setAllLinks}/>
+      <MainLinks allLinks={allLinks}/>
     </div>
   );
-}
+};
 
 export default App;

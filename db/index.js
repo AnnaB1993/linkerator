@@ -1,7 +1,9 @@
 // Connect to DB
 const { Client } = require("pg");
+
 const DB_NAME = "linkerator-dev";
 const DB_URL = process.env.DATABASE_URL || `postgres://localhost:5432/${DB_NAME}`;
+
 const client = new Client(DB_URL);
 
 // database methods
@@ -70,22 +72,32 @@ async function updateLink(linkId, fields = {}) {
   }
 }
 
-async function updateClickCount(linkId, clickCount) {
+async function updateClickCount(linkId) {
   try {
     await client.query(
       `
-      UPDATE links
-      SET clicks=$2
-      WHERE id=$1
-      RETURNING *;
-      `,
-      [linkId, clickCount]
+    UPDATE links
+    SET clicks = clicks + 1
+    WHERE id=$1
+    RETURNING *;
+    `,
+      [linkId]
     );
-
     const updatedLink = await getLinkById(linkId);
     return updatedLink;
+  } catch (error) {}
+}
+
+async function sortLinks() {
+  try {
+    const { rows: linkIds } = await client.query(`
+    SELECT * FROM links
+    ORDER BY clicks DESC;
+    `);
+    const allLinks = await Promise.all(linkIds.map((link) => getLinkById(link.id)));
+    return allLinks;
   } catch (error) {
-    console.log("updateClickCount:", error);
+    console.log("getAllLinks", error);
   }
 }
 
@@ -220,6 +232,7 @@ WHERE tags.tagname=$1;
     console.log("getLinksByTag", error);
   }
 }
+
 // export
 module.exports = {
   client,
@@ -233,4 +246,5 @@ module.exports = {
   getAllTags,
   getLinksByTag,
   updateClickCount,
+  sortLinks,
 };
