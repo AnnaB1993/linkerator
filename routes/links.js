@@ -1,6 +1,13 @@
 const express = require("express");
 const linksRouter = express.Router();
-const { getAllLinks, createLink, updateClickCount, getLinkById } = require("../db/index");
+const {
+  getAllLinks,
+  createLink,
+  updateClickCount,
+  getLinkById,
+  sortLinks,
+} = require("../db/index");
+const tagsRouter = require("./tags");
 
 linksRouter.use((req, res, next) => {
   console.log("A request is being made to /links");
@@ -10,6 +17,14 @@ linksRouter.use((req, res, next) => {
 
 linksRouter.get("/", async (req, res) => {
   const allLinks = await getAllLinks();
+
+  res.send({
+    allLinks,
+  });
+});
+
+linksRouter.get("/sorted-by-popularity", async (req, res) => {
+  const allLinks = await sortLinks();
 
   res.send({
     allLinks,
@@ -42,10 +57,9 @@ linksRouter.post("/", async (req, res, next) => {
 
 linksRouter.patch("/:linkId", async (req, res, next) => {
   const { linkId } = req.params;
-  const { clickCount } = req.body;
 
   try {
-    await updateClickCount(linkId, clickCount);
+    await updateClickCount(linkId);
     const updatedLink = await getLinkById(linkId);
     console.log(updatedLink);
 
