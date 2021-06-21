@@ -88,18 +88,18 @@ async function updateClickCount(linkId) {
   } catch (error) {}
 }
 
-async function sortLinks() {
-  try {
-    const { rows: linkIds } = await client.query(`
-    SELECT * FROM links
-    ORDER BY clicks DESC;
-    `);
-    const allLinks = await Promise.all(linkIds.map((link) => getLinkById(link.id)));
-    return allLinks;
-  } catch (error) {
-    console.log("getAllLinks", error);
-  }
-}
+// async function sortLinks() {
+//   try {
+//     const { rows: linkIds } = await client.query(`
+//     SELECT * FROM links
+//     ORDER BY clicks DESC;
+//     `);
+//     const allLinks = await Promise.all(linkIds.map((link) => getLinkById(link.id)));
+//     return allLinks;
+//   } catch (error) {
+//     console.log("getAllLinks", error);
+//   }
+// }
 
 async function createTags(tagList) {
   if (tagList.length === 0) {
@@ -246,5 +246,5 @@ module.exports = {
   getAllTags,
   getLinksByTag,
   updateClickCount,
-  sortLinks,
+  // sortLinks,
 };
