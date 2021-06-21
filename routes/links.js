@@ -23,13 +23,13 @@ linksRouter.get("/", async (req, res) => {
   });
 });
 
-linksRouter.get("/sorted-by-popularity", async (req, res) => {
-  const allLinks = await sortLinks();
+// linksRouter.get("/sorted-by-popularity", async (req, res) => {
+//   const allLinks = await sortLinks();
 
-  res.send({
-    allLinks,
-  });
-});
+//   res.send({
+//     allLinks,
+//   });
+// });
 
 linksRouter.post("/", async (req, res, next) => {
   const { url, comments, tags = "" } = req.body;
