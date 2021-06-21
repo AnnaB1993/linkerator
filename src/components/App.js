@@ -28,7 +28,9 @@ const App = () => {
     <div className="App">
       <Header allLinks={allLinks} setAllLinks={setAllLinks} setSelector={setSelector} />
 
-      <MainLinks allLinks={selectors[selector](allLinks)} />
+      {/* <MainLinks allLinks={allLinks} /> */}
+      <MainLinks allLinks={selectors[selector](allLinks)} setAllLinks={setAllLinks} setSelector={setSelector}/>
+
     </div>
   );
 };

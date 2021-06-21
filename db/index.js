@@ -1,8 +1,9 @@
 // Connect to DB
 const { Client } = require("pg");
 
-const DB_NAME = "linkerator-dev";
-const DB_URL = process.env.DATABASE_URL || `postgres://localhost:5432/${DB_NAME}`;
+const DB_NAME = "linkerator";
+const DB_URL =
+  process.env.DATABASE_URL || `postgres://localhost:5432/${DB_NAME}`;
 
 const client = new Client(DB_URL);
 
@@ -85,7 +86,9 @@ async function updateClickCount(linkId) {
     );
     const updatedLink = await getLinkById(linkId);
     return updatedLink;
-  } catch (error) {}
+  } catch (error) {
+    console.error("updateClickFunc", error);
+  }
 }
 
 // async function sortLinks() {
@@ -207,7 +210,9 @@ async function getAllLinks() {
     const { rows: linkIds } = await client.query(`
     SELECT * FROM links;
     `);
-    const allLinks = await Promise.all(linkIds.map((link) => getLinkById(link.id)));
+    const allLinks = await Promise.all(
+      linkIds.map((link) => getLinkById(link.id))
+    );
     return allLinks;
   } catch (error) {
     console.log("getAllLinks", error);
