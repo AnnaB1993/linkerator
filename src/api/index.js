@@ -13,7 +13,6 @@ import axios from "axios";
 export async function getAllLinks() {
   try {
     const { data } = await axios.get("http://localhost:3000/api/links");
-    console.log("all existing links", data.allLinks);
     return data.allLinks;
   } catch (error) {
     console.error(error);

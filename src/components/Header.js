@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 
 import AddLinkForm from "./AddLinkForm";
 
 const Header = ({ allLinks, setAllLinks, setSelector }) => {
+  const searchInput = useRef("");
+
   const sortLinksHandler = (e) => {
     setSelector("popularity");
   };
@@ -16,9 +18,9 @@ const Header = ({ allLinks, setAllLinks, setSelector }) => {
   };
 
   return (
-    <nav className="navbar" role="navigation" aria-label="main navigation">
+    <nav className="navbar is-success" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
-        <a className="navbar-item is-size-2 has-text-weight-bold has-background-info has-text-white">
+        <a className="navbar-item is-size-2 has-text-weight-bold has-text-white">
           Linkerator!
         </a>
       </div>
@@ -36,15 +38,19 @@ const Header = ({ allLinks, setAllLinks, setSelector }) => {
           </a>
           <div className="navbar-item has-dropdown is-hoverable">
             <a className="navbar-link">Add New Link</a>
-
             <div className="navbar-dropdown">
               <AddLinkForm setAllLinks={setAllLinks} allLinks={allLinks} />
             </div>
           </div>
         </div>
-
-        <div className="nav-bar-end is-size-4">
-          <div className="navbar-item"></div>
+        <div className="navbar-end is-size-4 mx-3 px-2">
+          <label className="label navbar-item is-size-4 my-3">Search Links:</label>
+          <input
+            ref={searchInput}
+            type="text"
+            className="input navbar-item has-text-grey my-4"
+            placeholder="search for links or tags"
+          />
         </div>
       </div>
     </nav>
