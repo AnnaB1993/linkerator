@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { getAllLinks, sortAllLinksByPopularity } from "../api";
+import React from "react";
 
-const Header = ({ allLinks, setAllLinks }) => {
-  const sortLinksHandler = async () => {
-    const sorted = await sortAllLinksByPopularity();
-    setAllLinks([]);
-    setAllLinks(sorted);
+import AddLinkForm from "./AddLinkForm";
+
+const Header = ({ allLinks, setAllLinks, setSelector }) => {
+  const sortLinksHandler = (e) => {
+    setSelector("popularity");
   };
 
-  const allLinksHandler = async () => {
-    const allLinks = await getAllLinks();
-    setAllLinks([]);
-    setAllLinks(allLinks);
+  const allLinksHandler = () => {
+    setSelector("default");
+  };
+
+  const sortLinksByDateHandler = (e) => {
+    setSelector("date");
   };
 
   return (
@@ -20,31 +21,31 @@ const Header = ({ allLinks, setAllLinks }) => {
         <a className="navbar-item is-size-2 has-text-weight-bold has-background-info has-text-white">
           Linkerator!
         </a>
-
-        <a
-          role="button"
-          className="navbar-burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarBasicExample"
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
       </div>
 
-      <div id="navbarBasicExample" className="navbar-menu">
+      <div className="navbar-menu">
         <div className="navbar-start is-size-4">
           <a onClick={allLinksHandler} className="navbar-item">
             All Links
           </a>
           <a onClick={sortLinksHandler} className="navbar-item">
-            Sorted by Popularity
+            Sort by Popularity
           </a>
+          <a onClick={sortLinksByDateHandler} className="navbar-item">
+            Sort by Date
+          </a>
+          <div className="navbar-item has-dropdown is-hoverable">
+            <a className="navbar-link">Add New Link</a>
+
+            <div className="navbar-dropdown">
+              <AddLinkForm setAllLinks={setAllLinks} allLinks={allLinks} />
+            </div>
+          </div>
         </div>
 
-        <div className="navbar-end"></div>
+        <div className="nav-bar-end is-size-4">
+          <div className="navbar-item"></div>
+        </div>
       </div>
     </nav>
   );

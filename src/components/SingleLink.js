@@ -1,15 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+
+const formatDate = (stringDate) => {
+  const dateObj = new Date(stringDate);
+  const mm = dateObj.getMonth() + 1;
+  const dd = dateObj.getDate();
+  const yyyy = dateObj.getFullYear();
+  return `${mm}/${dd}/${yyyy}`;
+};
 
 const SingleLink = ({ singleLink }) => {
   const { url, comments, clicks, date, tags } = singleLink;
-
+  const formattedDate = formatDate(date);
   return (
-    <div className="card my-3 mx-2">
+    <div className="card my-3 mx-2 has-background-success-light">
       <div className="card-content">
         <div className="content">
-          <p>{url}</p>
+          <p href="{url}">{url}</p>
           <p>
-            Clicked {clicks} since {date}
+            Clicked {clicks} times since {formattedDate}
           </p>
           <p>Comments: {comments}</p>
         </div>
@@ -34,19 +42,3 @@ const SingleLink = ({ singleLink }) => {
 };
 
 export default SingleLink;
-
-/* <div className="single-link">
-      <p>{url}</p>
-      <p>
-        Clicked {clicks} since {date}
-      </p>
-      <p>Comments: {comments}</p>
-      <div>
-        Includes tags:{" "}
-        {tags &&
-          tags.map((tag) => {
-            const { id, tagname } = tag;
-            return <p key={id}>{tagname}</p>;
-          })}
-      </div>
-    </div> */
