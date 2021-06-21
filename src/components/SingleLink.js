@@ -19,7 +19,9 @@ const SingleLink = ({ singleLink }) => {
           <p>
             Clicked {clicks} times since {formattedDate}
           </p>
-          <p>Comments: {comments}</p>
+          <p>
+            <strong>Comments:</strong> {comments}
+          </p>
         </div>
       </div>
       <footer className="card-footer is-align-self-auto">

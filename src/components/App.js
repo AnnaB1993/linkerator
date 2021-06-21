@@ -21,15 +21,13 @@ const App = () => {
       })
       .catch((error) => {
         console.error(error);
-      })
-
-      .then((response) => console.log(response));
+      });
   }, []);
 
   return (
     <div className="App">
       <Header allLinks={allLinks} setAllLinks={setAllLinks} setSelector={setSelector} />
-      {/* <MainLinks allLinks={allLinks} /> */}
+
       <MainLinks allLinks={selectors[selector](allLinks)} />
     </div>
   );
