@@ -45,7 +45,7 @@ const Header = ({ allLinks, setAllLinks, setSelector, searchTerm, setSearchTerm 
           </div>
         </div>
         <div className="navbar-end is-size-4 mx-3 px-2">
-          <label className="label navbar-item is-size-4 my-3">Search Links:</label>
+          {/* <label className="label navbar-item is-size-4 my-3"></label> */}
           <input
             value={searchTerm}
             type="text"
