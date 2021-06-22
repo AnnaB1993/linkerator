@@ -1,19 +1,20 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 
 import AddLinkForm from "./AddLinkForm";
 
-const Header = ({ allLinks, setAllLinks, setSelector }) => {
-  const searchInput = useRef("");
-
+const Header = ({ allLinks, setAllLinks, setSelector, searchTerm, setSearchTerm }) => {
   const sortLinksHandler = (e) => {
+    setSearchTerm("");
     setSelector("popularity");
   };
 
   const allLinksHandler = () => {
+    setSearchTerm("");
     setSelector("default");
   };
 
   const sortLinksByDateHandler = (e) => {
+    setSearchTerm("");
     setSelector("date");
   };
 
@@ -46,10 +47,11 @@ const Header = ({ allLinks, setAllLinks, setSelector }) => {
         <div className="navbar-end is-size-4 mx-3 px-2">
           <label className="label navbar-item is-size-4 my-3">Search Links:</label>
           <input
-            ref={searchInput}
+            value={searchTerm}
             type="text"
             className="input navbar-item has-text-grey my-4"
             placeholder="search for links or tags"
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>

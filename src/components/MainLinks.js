@@ -1,6 +1,6 @@
 import React from "react";
 import { SingleLink } from "./index";
-const MainLinks = ({ allLinks, setAllLinks, setSelector, selector }) => {
+const MainLinks = ({ allLinks, setAllLinks, setSelector, selector, setSearchTerm }) => {
   return (
     <div className="is-flex is-flex-wrap-wrap">
       {allLinks &&
@@ -13,6 +13,7 @@ const MainLinks = ({ allLinks, setAllLinks, setSelector, selector }) => {
               allLinks={allLinks}
               selector={selector}
               setSelector={setSelector}
+              setSearchTerm={setSearchTerm}
             />
           );
         })}

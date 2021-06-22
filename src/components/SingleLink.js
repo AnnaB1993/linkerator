@@ -10,7 +10,7 @@ const formatDate = (stringDate) => {
   return `${mm}/${dd}/${yyyy}`;
 };
 
-const SingleLink = ({ singleLink, setAllLinks, allLinks, selector, setSelector }) => {
+const SingleLink = ({ singleLink, setAllLinks, allLinks, setSearchTerm }) => {
   const { id, url, comments, clicks, date, tags } = singleLink;
   const formattedDate = formatDate(date);
 
@@ -21,13 +21,17 @@ const SingleLink = ({ singleLink, setAllLinks, allLinks, selector, setSelector }
       const updatedClicksLinks = await updateClicks(id);
       setAllLinks([...allLinks, updatedClicksLinks]);
       // console.log(this.selector.selector)
-  
     } catch (error) {
       console.log("this error", error);
     }
   };
+
+  const handleClick = (tag) => {
+    setSearchTerm(tag.tagname);
+  };
+
   return (
-    <div className="card my-3 mx-2 has-background-success-light">
+    <div className="card my-2 mx-2 has-background-success-light">
       <div className="card-content">
         <div className="content">
           <a href="{url}" onClick={() => goToSite(url)}>
@@ -50,6 +54,8 @@ const SingleLink = ({ singleLink, setAllLinks, allLinks, selector, setSelector }
               const { id, tagname } = tag;
               return (
                 <a
+                  key={tag}
+                  onClick={() => handleClick(tag)}
                   className="tag has-background-info has-text-white mx-1"
                   key={id}
                 >

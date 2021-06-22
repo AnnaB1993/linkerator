@@ -13,6 +13,7 @@ const selectors = {
 const App = () => {
   const [allLinks, setAllLinks] = useState([]);
   const [selector, setSelector] = useState("default");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     getAllLinks()
@@ -24,13 +25,35 @@ const App = () => {
       });
   }, []);
 
+  let linksToRender = allLinks;
+  if (searchTerm) {
+    const searchLower = searchTerm.toLowerCase();
+    linksToRender = linksToRender.filter((link) => {
+      const urlMatch = link.url.toLowerCase().includes(searchLower);
+      const tagsMatch = link.tags.some((tag) => {
+        return tag.tagname.toLowerCase().includes(searchLower);
+      });
+      return urlMatch || tagsMatch;
+    });
+  }
+
   return (
     <div className="App">
-      <Header allLinks={allLinks} setAllLinks={setAllLinks} setSelector={setSelector} />
+      <Header
+        allLinks={allLinks}
+        setAllLinks={setAllLinks}
+        setSelector={setSelector}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
 
       {/* <MainLinks allLinks={allLinks} /> */}
-      <MainLinks allLinks={selectors[selector](allLinks)} setAllLinks={setAllLinks} setSelector={setSelector}/>
-
+      <MainLinks
+        allLinks={selectors[selector](linksToRender)}
+        setAllLinks={setAllLinks}
+        setSelector={setSelector}
+        setSearchTerm={setSearchTerm}
+      />
     </div>
   );
 };

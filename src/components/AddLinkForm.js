@@ -58,7 +58,7 @@ const AddLinkForm = ({ allLinks, setAllLinks }) => {
             value={tags}
             type="text"
             className="input"
-            placeholder="tags separated by space"
+            placeholder="separated by space"
             onChange={(e) => setTags(e.target.value)}
           />
         </div>
