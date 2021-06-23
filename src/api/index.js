@@ -1,35 +1,13 @@
 import axios from "axios";
 
-// export async function getSomething() {
-//   try {
-//     const { data } = await axios.get("/api");
-//     console.log(data);
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
 export async function getAllLinks() {
   try {
-    const { data } = await axios.get("http://localhost:3000/api/links");
+    const { data } = await axios.get("/api/links");
     return data.allLinks;
   } catch (error) {
     console.error(error);
   }
 }
-
-// export async function sortAllLinksByPopularity() {
-//   try {
-//     const { data } = await axios.get(
-//       "http://localhost:3000/api/links/sorted-by-popularity"
-//     );
-//     console.log("sorted links array", data.allLinks);
-//     return data.allLinks;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
 
 export async function createNewLinks([url, comments, tags] = "") {
   try {
@@ -50,11 +28,9 @@ export async function updateClicks(linkId) {
     const { data } = await axios.patch(`api/links/${linkId}`, {
       linkId,
     });
-    console.log("countWasUpdated", data)
+    console.log("countWasUpdated", data);
     return data;
   } catch (error) {
     console.log("updateClickApi", error);
-
-
   }
 }
